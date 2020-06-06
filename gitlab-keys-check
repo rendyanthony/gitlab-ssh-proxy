@@ -1,0 +1,7 @@
+#!/usr/bin/sh
+
+DIR_NAME=$(readlink -f $(dirname $0))
+
+/usr/bin/ssh -p 2222 -o StrictHostKeyChecking=no git@localhost \
+    /opt/gitlab/embedded/service/gitlab-shell/bin/gitlab-shell-authorized-keys-check $@ | \
+    sed "s:/opt/gitlab/embedded/service/gitlab-shell/bin/gitlab-shell:${DIR_NAME}/gitlab-shell-proxy:"

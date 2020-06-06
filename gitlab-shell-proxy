@@ -1,0 +1,5 @@
+#!/usr/bin/sh
+
+/usr/bin/ssh -p 2222 -o StrictHostKeyChecking=no git@localhost \
+    "SSH_ORIGINAL_COMMAND=\"${SSH_ORIGINAL_COMMAND}\" \
+    /opt/gitlab/embedded/service/gitlab-shell/bin/gitlab-shell $@"
