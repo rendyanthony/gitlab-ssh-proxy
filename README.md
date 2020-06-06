@@ -56,7 +56,7 @@ This will generate two files:
 
 Modify `/etc/ssh/sshd_config` on the and add the following lines. The key ingredient here is the usage of [`AuthorizedKeysCommand`](https://manpages.debian.org/unstable/openssh-server/sshd_config.5.en.html#AuthorizedKeysCommand). This will allow us to validate the key using a script.
 
-```
+```ssh-config
 Match User git
     PasswordAuthentication no
     AuthorizedKeysCommand /usr/local/bin/gitlab-keys-check git %u %k
