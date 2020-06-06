@@ -54,7 +54,7 @@ This will generate two files:
  - `/home/git/.ssh/id_ed25519` &mdash; Private Key
  - `/home/git/.ssh/id_ed25519.pub` &mdash; Public Key
 
-Modify `/etc/ssh/sshd_config` on the and add the following lines. The key ingredient here is the usage of [`AuthorizedKeysCommand`](https://manpages.debian.org/unstable/openssh-server/sshd_config.5.en.html#AuthorizedKeysCommand). This will allow us to validate the key using a script.
+Modify `/etc/ssh/sshd_config` to add the following lines.
 
 ```ssh-config
 Match User git
@@ -63,7 +63,9 @@ Match User git
     AuthorizedKeysCommandUser git
 ```
 
-Reload the SSH Server
+The key ingredient here is the usage of [`AuthorizedKeysCommand`](https://manpages.debian.org/unstable/openssh-server/sshd_config.5.en.html#AuthorizedKeysCommand). This will allow us to validate the user's key using a script instead of a pre-defined `authorized_keys` file.
+
+We would need to reload the SSH service to apply the configuration change.
 
 ```bash
 sudo systemctl reload sshd
@@ -83,6 +85,8 @@ Finally, fix the permission/ownership of the file to ensure that is only readabl
 podman exec -it gitlab /bin/sh -c \
     "chmod 600 /gitlab-data/ssh/authorized_keys; chown git:git /gitlab-data/ssh/authorized_keys"
 ```
+
+As the command will modifies the permission of a file in the host, the change will persist over different containers.
 
 ## Uninstall
 
