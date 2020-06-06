@@ -36,6 +36,13 @@ This will do the following things:
 1. Copy `gitlab-keys-check` and `gitlab-shell-proxy` to `/usr/local/bin`
 1. Install an SE Linux policy module: [`gitlab-ssh.te`](gitlab-ssh.te) to allow scripts executed from the SSH server to establish an SSH connection
 
+Optionally you can configure your the GitLab hostname and port number by creating a file named `/etc/gitlab-ssh.conf` with the following contents:
+
+```
+GITLAB_URL=git@localhost
+GITLAB_PORT=9222
+```
+
 ## Host Setup
 
 Create the `git` user on the host
