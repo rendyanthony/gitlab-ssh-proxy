@@ -1,7 +1,12 @@
 #!/usr/bin/sh
 
+for etc_dir in /etc /usr/local/etc; do
+    test -r ${etc_dir}/gitlab-ssh.conf && \
+        source ${etc_dir}/gitlab-ssh.conf
+done
+
 DIR_NAME=$(readlink -f $(dirname $0))
 
-/usr/bin/ssh -p 2222 -o StrictHostKeyChecking=no git@localhost \
+/usr/bin/ssh -p ${GITLAB_PORT:-2222} -o StrictHostKeyChecking=no ${GITLAB_URL:-git@localhost} \
     /opt/gitlab/embedded/service/gitlab-shell/bin/gitlab-shell-authorized-keys-check $@ | \
     sed "s:/opt/gitlab/embedded/service/gitlab-shell/bin/gitlab-shell:${DIR_NAME}/gitlab-shell-proxy:"
