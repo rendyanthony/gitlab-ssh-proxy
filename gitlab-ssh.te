@@ -1,5 +1,5 @@
 
-module gitlab-ssh-proxy 1.0;
+module gitlab-ssh 1.0;
 
 require {
     type unreserved_port_t;

@@ -12,8 +12,8 @@ build() {
     set -e
 
     mkdir -p $BUILD_DIR
-    checkmodule -M -m -o $BUILD_DIR/gitlab-ssh-proxy.mod $SRC_DIR/gitlab-ssh-proxy.te
-    semodule_package -o $BUILD_DIR/gitlab-ssh-proxy.pp -m $BUILD_DIR/gitlab-ssh-proxy.mod
+    checkmodule -M -m -o $BUILD_DIR/gitlab-ssh.mod $SRC_DIR/gitlab-ssh.te
+    semodule_package -o $BUILD_DIR/gitlab-ssh.pp -m $BUILD_DIR/gitlab-ssh.mod
 
     test -n "$SUDO_UID" && chown -R $SUDO_UID:$SUDO_GID $BUILD_DIR
 
@@ -26,8 +26,8 @@ install_pkg() {
     install $SRC_DIR/gitlab-keys-check $PREFIX/bin
     install $SRC_DIR/gitlab-shell-proxy $PREFIX/bin
 
-    test ! -e $BUILD_DIR/gitlab-ssh-proxy.pp && build
-    semodule -i $BUILD_DIR/gitlab-ssh-proxy.pp
+    test ! -e $BUILD_DIR/gitlab-ssh.pp && build
+    semodule -i $BUILD_DIR/gitlab-ssh.pp
 
     set +e
 }
@@ -35,21 +35,23 @@ install_pkg() {
 remove() {
     test -e $PREFIX/bin/gitlab-keys-check && rm $PREFIX/bin/gitlab-keys-check
     test -e $PREFIX/bin/gitlab-shell-proxy && rm $PREFIX/bin/gitlab-shell-proxy
-    ( semodule -l | grep gitlab-ssh-proxy > /dev/null ) && semodule -r gitlab-ssh-proxy
+    ( semodule -l | grep gitlab-ssh > /dev/null ) && semodule -r gitlab-ssh
 }
 
 show_help() {
-    echo "GitLab SSH Proxy"
-    echo ""
-    echo "Usage:"
-    echo "  $0 [commands]..."
-    echo ""
-    echo "Available Commands:"
-    echo "  build   Build SELinux policy module package in $BUILD_DIR"
-    echo "  clean   Remove $BUILD_DIR directory"
-    echo "  install Copy scripts to $PREFIX/bin and install SE module package"
-    echo "  remove  Remove scripts from $PREFIX/bin and remove SE module package"
-    echo "  help    Show available commands"
+    cat <<EOD
+GitLab SSH Proxy
+
+Usage:
+  ./setup.sh [commands]...
+
+Available Commands:
+  build   Build SELinux policy module package in ./build
+  clean   Remove ./build directory
+  install Copy scripts to /usr/local/bin and install SE Linux module package
+  remove  Remove scripts and SE Linux module package
+  help    Show available commands
+EOD
 }
 
 if [[ $# -lt 1 ]]; then

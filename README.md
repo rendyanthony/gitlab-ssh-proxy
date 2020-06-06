@@ -33,11 +33,10 @@ sudo ./setup.sh install
 ```
 
 This will do the following things:
-1. Copy [`gitlab-keys-check`](gitlab-keys-check) to `/usr/local/lib`
-1. Copy [`gitlab-shell-proxy`](gitlab-shell-proxy) to `/usr/local/lib`
-1. Install an [SE Linux Policy Module](gitlab-ssh-proxy.te) to allow the scripts executed from the SSH server to establish an SSH connection
+1. Copy `gitlab-keys-check` and `gitlab-shell-proxy` to `/usr/local/bin`
+1. Install an SE Linux policy module: [`gitlab-ssh.te`](gitlab-ssh.te) to allow scripts executed from the SSH server to establish an SSH connection
 
-### Host Setup
+## Host Setup
 
 Create the `git` user on the host
 
@@ -55,7 +54,7 @@ This will generate two files:
  - `/home/git/.ssh/id_ed25519` &mdash; Private Key
  - `/home/git/.ssh/id_ed25519.pub` &mdash; Public Key
 
-Then modify `/etc/ssh/sshd_config` on the and add the following lines. The key ingredient here is the usage of [`AuthorizedKeysCommand`](https://manpages.debian.org/unstable/openssh-server/sshd_config.5.en.html#AuthorizedKeysCommand).
+Modify `/etc/ssh/sshd_config` on the and add the following lines. The key ingredient here is the usage of [`AuthorizedKeysCommand`](https://manpages.debian.org/unstable/openssh-server/sshd_config.5.en.html#AuthorizedKeysCommand). This will allow us to validate the key using a script.
 
 ```
 Match User git
@@ -84,6 +83,16 @@ Finally, fix the permission/ownership of the file to ensure that is only readabl
 podman exec -it gitlab /bin/sh -c \
     "chmod 600 /gitlab-data/ssh/authorized_keys; chown git:git /gitlab-data/ssh/authorized_keys"
 ```
+
+## Uninstall
+
+This will remove all files and the SE Linux proxy module.
+
+```
+sudo ./setup.sh remove
+```
+
+Don't to remove the additonal configuration in `/etc/ssh/sshd_config`
 
 ## References
 
