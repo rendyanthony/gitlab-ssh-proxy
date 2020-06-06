@@ -26,8 +26,10 @@ install_pkg() {
     install $SRC_DIR/gitlab-keys-check $PREFIX/bin
     install $SRC_DIR/gitlab-shell-proxy $PREFIX/bin
 
-    test ! -e $BUILD_DIR/gitlab-ssh.pp && build
-    semodule -i $BUILD_DIR/gitlab-ssh.pp
+    if [[ $SE_LINUX != "no" ]]; then
+        test ! -e $BUILD_DIR/gitlab-ssh.pp && build
+        semodule -i $BUILD_DIR/gitlab-ssh.pp
+    fi
 
     set +e
 }
