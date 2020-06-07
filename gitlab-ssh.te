@@ -5,13 +5,12 @@ require {
     type unreserved_port_t;
     type sshd_t;
     type ssh_exec_t;
-    class file { execute execute_no_trans map open read unlink };
+    class file { create execute execute_no_trans map open read unlink };
     class tcp_socket name_connect;
 }
 
 #============= sshd_t ==============
 
 allow sshd_t ssh_exec_t:file { execute execute_no_trans open read };
-
 allow sshd_t ssh_exec_t:file map;
 allow sshd_t unreserved_port_t:tcp_socket name_connect;
