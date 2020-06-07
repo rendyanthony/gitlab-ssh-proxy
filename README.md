@@ -1,11 +1,13 @@
 # GitLab SSH Proxy
 
-One if the issue with running a GitLab instance in a container is to expose the GitLab SSH in the host machine without conflicting with the existing SSH port (22) on the host. There are several alternatives online (see References below) but I believe there must be a more elegant way. Something that avoids:
+One if the issue with running a GitLab instance in a container is to expose the GitLab SSH in the host machine without conflicting with the existing SSH port (22) on the host. There are several alternatives online (see References below) but I believe there must be a more elegant way.
+
+I would like to avoid:
 - Hardcoding the UID and GID of any account in the host machine
 - Running additional services/daemon in the host machine
+- Providing Docker access to a special account in the host machine
 - Duplicating GitLab's `authorized_keys` files in the host machine
 - Using `iptables`
-- Providing Docker access to an account
 
 ## Background
 
