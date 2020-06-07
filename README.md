@@ -34,7 +34,9 @@ sudo ./setup.sh install
 ```
 
 This will do the following things:
-1. Copy `gitlab-keys-check` and `gitlab-shell-proxy` to `/usr/local/bin`
+1. Copy the follwoing scripts to `/usr/local/bin`
+    - [`gitlab-keys-check`](gitlab-keys-check)
+    - [`gitlab-shell-proxy`](gitlab-shell-proxy)
 1. Install an SE Linux policy module: [`gitlab-ssh.te`](gitlab-ssh.te) to allow scripts executed from the SSH server to establish an SSH connection
 
 By default the scripts assumes that the GitLab container is accessible at `git@localhost` port `22`. To change this, create a file `/etc/gitlab-ssh.conf` with your specific configuration:
@@ -103,13 +105,13 @@ Test the connection:
 ```
 $ ssh git@localhost
 PTY allocation request failed on channel 0
-Welcome to GitLab, @<username>!
+Welcome to GitLab, @user!
 Connection to localhost closed.
 ```
 
 ## Uninstall
 
-This will remove all files and the SE Linux proxy module.
+This will remove all the script files and the SE Linux proxy module.
 
 ```
 sudo ./setup.sh remove
