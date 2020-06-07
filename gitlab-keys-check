@@ -1,8 +1,10 @@
 #!/usr/bin/sh
 
-for etc_dir in /etc /usr/local/etc; do
-    test -r ${etc_dir}/gitlab-ssh.conf && \
-        source ${etc_dir}/gitlab-ssh.conf
+for conf_dir in $HOME/.config /etc; do
+    if [[ -r ${conf_dir}/gitlab-ssh.conf ]]; then
+        source ${conf_dir}/gitlab-ssh.conf
+        break
+    fi
 done
 
 DIR_NAME=$(readlink -f $(dirname $0))

@@ -39,13 +39,6 @@ This will do the following things:
     - [`gitlab-shell-proxy`](gitlab-shell-proxy)
 1. Install an SE Linux policy module: [`gitlab-ssh.te`](gitlab-ssh.te) to allow scripts executed from the SSH server to establish an SSH connection
 
-By default the scripts assumes that the GitLab container is accessible at `git@localhost` port `22`. To change this, create a file `/etc/gitlab-ssh.conf` with your specific configuration:
-
-```
-GITLAB_URL=git@localhost
-GITLAB_PORT=9222
-```
-
 ## Host Setup
 
 Create the `git` user on the host
@@ -79,6 +72,13 @@ We would need to reload the SSH service to apply the configuration change.
 
 ```bash
 sudo systemctl reload sshd
+```
+
+You can override the GitLab SSH URL and Port by creating a file named `gitlab-ssh.conf` and place it either in `/home/git/.config` or `/etc`.
+
+```bash
+GITLAB_URL=git@localhost
+GITLAB_PORT=9222
 ```
 
 ## Container Setup

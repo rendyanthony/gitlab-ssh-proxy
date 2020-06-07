@@ -1,8 +1,10 @@
 #!/usr/bin/sh
 
-for etc_dir in /etc /usr/local/etc; do
-    test -r ${etc_dir}/gitlab-ssh.conf && \
-        source ${etc_dir}/gitlab-ssh.conf
+for conf_dir in $HOME/.config /etc; do
+    if [[ -r ${conf_dir}/gitlab-ssh.conf ]]; then
+        source ${conf_dir}/gitlab-ssh.conf
+        break
+    fi
 done
 
 /usr/bin/ssh -p ${GITLAB_PORT:-2222} -o StrictHostKeyChecking=no ${GITLAB_URL:-git@localhost} \
