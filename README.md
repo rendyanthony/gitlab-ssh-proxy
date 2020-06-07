@@ -9,6 +9,14 @@ I would like to avoid:
 - Duplicating GitLab's `authorized_keys` files in the host machine
 - Using `iptables`
 
+## Approach
+- Use the [`AuthorizedKeysCommand`](https://manpages.debian.org/unstable/openssh-server/sshd_config.5.en.html#AuthorizedKeysCommand) configuration in the SSH Server to call a custom script&mdash;[`gitlab-keys-check`](gitlab-keys-check) when it validates the `git` user public key.
+- `gitlab-keys-check` will connect to the GitLab via SSH and executes `gitlab-shell-authorized-keys-check` in the container.
+    - If the keys provided by the user is valid, it will return the authorized keys data.
+- The authorized keys data from GitLab includes a `command` section which forces the SSH Server to execute `gitlab-shell`.
+    - As this file doesn't exist in the host, we change this `gitlab-shell-proxy` before passing it back to the SSH server.
+- The SSH server will then execute `gitlab-shell-proxy` which will connect to GitLab via SSH and executes the original command, `gitlab-shell`, inside the container effectively establishing the proxy.
+
 ## Background
 
 Here is how I run my GitLab container. I am using `podman` on Fedora, but it shouldn't make much different if you're using Docker.
