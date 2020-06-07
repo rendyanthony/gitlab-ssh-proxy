@@ -1,10 +1,11 @@
-# gitlab-ssh-proxy
+# GitLab SSH Proxy
 
 One if the issue with running a GitLab instance in a container is to expose the GitLab SSH in the host machine without conflicting with the existing SSH port (22) on the host. There are several alternatives online (see References below) but I believe there must be a more elegant way. Something that avoids:
 - Hardcoding the UID and GID of any account in the host machine
 - Running additional services/daemon in the host machine
 - Duplicating GitLab's `authorized_keys` files in the host machine
 - Using `iptables`
+- Providing Docker access to an account
 
 ## Background
 
@@ -36,7 +37,7 @@ This will do the following things:
 1. Copy `gitlab-keys-check` and `gitlab-shell-proxy` to `/usr/local/bin`
 1. Install an SE Linux policy module: [`gitlab-ssh.te`](gitlab-ssh.te) to allow scripts executed from the SSH server to establish an SSH connection
 
-Optionally you can configure your the GitLab hostname and port number by creating a file named `/etc/gitlab-ssh.conf` with the following contents:
+By default the scripts assumes that the GitLab container is accessible at `git@localhost` port `22`. To change this, create a file `/etc/gitlab-ssh.conf` with your specific configuration:
 
 ```
 GITLAB_URL=git@localhost
@@ -94,6 +95,17 @@ podman exec -it gitlab /bin/sh -c \
 ```
 
 As the command will modifies the permission of a file in the host, the change will persist over different containers.
+
+## Testing
+
+Test the connection:
+
+```
+$ ssh git@localhost
+PTY allocation request failed on channel 0
+Welcome to GitLab, @<username>!
+Connection to localhost closed.
+```
 
 ## Uninstall
 
