@@ -7,6 +7,6 @@ for conf_dir in $HOME/.config /etc; do
     fi
 done
 
-/usr/bin/ssh -p ${GITLAB_PORT:-2222} -o StrictHostKeyChecking=no ${GITLAB_URL:-git@localhost} \
+/usr/bin/ssh -p ${GITLAB_PORT:-2222} -o StrictHostKeyChecking=no ${GITLAB_HOST:-git@localhost} \
     "SSH_ORIGINAL_COMMAND=\"${SSH_ORIGINAL_COMMAND}\" \
     /opt/gitlab/embedded/service/gitlab-shell/bin/gitlab-shell $@"

@@ -46,7 +46,7 @@ By the default the script assumes that the GitLab SSH service is accessible at `
 In this file you can define the following environment variables:
 
 ```bash
-GITLAB_URL=git@localhost
+GITLAB_HOST=git@localhost
 GITLAB_PORT=2222
 ```
 
