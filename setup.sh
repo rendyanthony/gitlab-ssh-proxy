@@ -85,9 +85,9 @@ do
             ;;
 
         *)
-            echo "Error: unrecognized command '${cmd}'"
-            echo "Use '$0 help' for supported commands"
-            break
+            echo "Error: unsupported command '${cmd}'" >&2
+            echo "Use '$0 help' for supported commands" >&2
+            exit 1
             ;;
     esac
 done
