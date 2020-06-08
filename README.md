@@ -106,7 +106,7 @@ First we would need to have a `git` user in the host machine. When a user connec
 
 GitLab authenticates users based on their SSH keys. This is traditionally done by adding the user's public key into an `authorized_keys` file. Recently GitLab foregoes this file and uses a database instead. GitLab uses a functionality in the Open SSH server called [`AuthorizedKeysCommand`](https://manpages.debian.org/unstable/openssh-server/sshd_config.5.en.html#AuthorizedKeysCommand) which allows it to execute a program to query its keys database and return the relevant key data.
 
-In the host, we do the same thing. We configure the `AuthorizedKeysCommand` to call our `gitlab-keys-check` script when someone tries to login as `git`. This script runs `ssh` to the container (via port 2222) and execute the actual tool, `gitlab-shell-authorized-keys-check`. It would return an `authorized_keys` entries which looks like this:
+In the host, we do the same thing. We configure the `AuthorizedKeysCommand` to call our [`gitlab-keys-check`](gitlab-keys-check) script when someone tries to login as `git`. This script runs `ssh` to the container (via port 2222) and execute the actual tool, `gitlab-shell-authorized-keys-check`. It would return an `authorized_keys` entries which looks like this:
 
 ```
 command="/opt/gitlab/embedded/service/gitlab-shell/bin/gitlab-shell key-1",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDJEO... username@hostname
@@ -114,13 +114,13 @@ command="/opt/gitlab/embedded/service/gitlab-shell/bin/gitlab-shell key-1",no-po
 
 The `command` option at the beginning forces the SSH server to execute `/opt/.../bin/gitlab-shell` when the key is used to login. The parameter i.e. `key-1` is used by GitLab to identify which uses this key belongs to.
 
-The command `/opt/.../bin/gitlab-shell` command does not exist in the host machine. Therefore before we return it back we replace this part with `gitlab-shell-proxy`.
+The command `/opt/.../bin/gitlab-shell` command does not exist in the host machine. Therefore before we return it back we replace this part with [`gitlab-shell-proxy`](gitlab-shell-proxy).
 
 The SSH server will see the updated command and execute `gitlab-shell-proxy`. This script will run `ssh` again and execute the orginal command `/opt/.../bin/gitlab-shell`, effectively creating a proxy to the container.
 
 For this to work, the `git` user in the host would need to have an `authorized_key` in the GitLab container. Therefore copy its public key file into `/gitlab-data/ssh/authorized_keys` in the container. We also need to adjust the file permission as Open SSH is quite strict about it.
 
-There is one complication. In machines with SE Linux enabled, we are unable to execute `ssh` from the `AuthorizedKeysCommand`. To workaround this, we would need to install a custom policy file `gitlab-ssh.te`[gitlab-ssh.te] to enable this. 
+There is one complication. In machines with SE Linux enabled, we are unable to execute `ssh` from the `AuthorizedKeysCommand`. To workaround this, we would need to install a custom policy file [`gitlab-ssh.te`](gitlab-ssh.te) to enable this. 
 
 ## References
 - https://blog.xiaket.org/2017/exposing.ssh.port.in.dockerized.gitlab-ce.html
