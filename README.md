@@ -81,7 +81,7 @@ You're good to go!
 
 ### Configuration
 
-By the default the scripts assumes that the GitLab SSH service is accessible at `git@localhost` port `2222`. If your setup is different, you can override this by creating a file named `gitlab-ssh.conf` in `/home/git/.config` or `/etc`.
+By default the scripts assumes that the GitLab SSH service is accessible at `git@localhost` port `2222`. If your setup is different, you can override this by creating a file named `gitlab-ssh.conf` in `/home/git/.config` or `/etc`.
 
 In this file you can define the following environment variables:
 
