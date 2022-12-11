@@ -35,6 +35,7 @@ It will do the following things:
     - [`gitlab-keys-check`](gitlab-keys-check)
     - [`gitlab-shell-proxy`](gitlab-shell-proxy)
 1. Build and install an SE Linux policy module: [`gitlab-ssh.te`](gitlab-ssh.te) to allow scripts executed from the SSH daemon to run the `ssh` binary.
+1. Copy [`99-gitlab-proxy.conf`](99-gitlab-proxy.conf) to `/etc/ssh/sshd_config.d/`
 
 Create the `git` user on the host
 
@@ -60,15 +61,6 @@ Fix the permission/ownership of the `authorized_keys` file to ensure that is onl
 # If you are using Docker, substitute podman with docker
 podman exec -it gitlab /bin/sh -c \
     "chmod 600 /gitlab-data/ssh/authorized_keys; chown git:git /gitlab-data/ssh/authorized_keys"
-```
-
-Open `/etc/ssh/sshd_config` and add the following lines:
-
-```ssh-config
-Match User git
-    PasswordAuthentication no
-    AuthorizedKeysCommand /usr/local/bin/gitlab-keys-check git %u %k
-    AuthorizedKeysCommandUser git
 ```
 
 Reload the SSH Service

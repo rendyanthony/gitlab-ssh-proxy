@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/usr/bin/bash
 
 SRC_DIR=$(dirname $0)
 BUILD_DIR="$SRC_DIR/build"
@@ -31,12 +31,17 @@ install_pkg() {
         semodule -i $BUILD_DIR/gitlab-ssh.pp
     fi
 
+    if [[ -d /etc/ssh/sshd_config.d ]]; then
+        sed -E "s#/usr/local#${PREFIX}#" $SRC_DIR/99-gitlab-proxy.conf > /etc/ssh/sshd_config.d/99-gitlab-proxy.conf
+    fi
+
     set +e
 }
 
 remove() {
     test -e $PREFIX/bin/gitlab-keys-check && rm $PREFIX/bin/gitlab-keys-check
     test -e $PREFIX/bin/gitlab-shell-proxy && rm $PREFIX/bin/gitlab-shell-proxy
+    test -e /etc/ssh/sshd_config.d/99-gitlab-proxy.conf && rm /etc/ssh/sshd_config.d/99-gitlab-proxy.conf
     ( semodule -l | grep gitlab-ssh > /dev/null ) && semodule -r gitlab-ssh
 }
 
