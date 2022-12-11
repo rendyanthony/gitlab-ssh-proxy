@@ -33,6 +33,8 @@ install_pkg() {
 
     if [[ -d /etc/ssh/sshd_config.d ]]; then
         sed -E "s#/usr/local#${PREFIX}#" $SRC_DIR/99-gitlab-proxy.conf > /etc/ssh/sshd_config.d/99-gitlab-proxy.conf
+    else
+        echo "Warning: /etc/ssh/sshd_config.d directory is missing"
     fi
 
     set +e
