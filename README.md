@@ -90,8 +90,6 @@ This will remove all the script files and the SE Linux proxy module.
 sudo ./setup.sh remove
 ```
 
-Don't forget to remove the additonal configuration in `/etc/ssh/sshd_config`
-
 ## <a name="how-does-it-work"></a>How Does it Work
 
 First we would need to have a `git` user in the host machine. When a user connects via SSH, it should be able to somehow redirect/forward the request as the `git` user in the container.
