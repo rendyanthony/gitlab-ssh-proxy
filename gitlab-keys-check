@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/usr/bin/bash
 
 for conf_dir in $HOME/.config /etc; do
     if [[ -r ${conf_dir}/gitlab-ssh.conf ]]; then
