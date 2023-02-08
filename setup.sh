@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 SRC_DIR=$(dirname $0)
 BUILD_DIR="$SRC_DIR/build"
