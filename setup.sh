@@ -17,8 +17,6 @@ build() {
 
     test -n "$SUDO_UID" && chown -R $SUDO_UID:$SUDO_GID $BUILD_DIR
 
-    sed -E "s#/usr/local#${PREFIX}#" $SRC_DIR/99-gitlab-proxy.conf > $BUILD_DIR/99-gitlab-proxy.conf
-
     set +e
 }
 
@@ -32,6 +30,8 @@ install_pkg() {
         test ! -e $BUILD_DIR/gitlab-ssh.pp && build
         semodule -i $BUILD_DIR/gitlab-ssh.pp
     fi
+
+    sed -E "s#/usr/local#${PREFIX}#" $SRC_DIR/99-gitlab-proxy.conf > $BUILD_DIR/99-gitlab-proxy.conf
 
     if [[ -d /etc/ssh/sshd_config.d ]]; then
         cp $BUILD_DIR/99-gitlab-proxy.conf /etc/ssh/sshd_config.d/99-gitlab-proxy.conf
