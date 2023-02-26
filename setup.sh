@@ -17,6 +17,8 @@ build() {
 
     test -n "$SUDO_UID" && chown -R $SUDO_UID:$SUDO_GID $BUILD_DIR
 
+    sed -E "s#/usr/local#${PREFIX}#" $SRC_DIR/99-gitlab-proxy.conf > $BUILD_DIR/99-gitlab-proxy.conf
+
     set +e
 }
 
@@ -32,9 +34,10 @@ install_pkg() {
     fi
 
     if [[ -d /etc/ssh/sshd_config.d ]]; then
-        sed -E "s#/usr/local#${PREFIX}#" $SRC_DIR/99-gitlab-proxy.conf > /etc/ssh/sshd_config.d/99-gitlab-proxy.conf
+        cp $BUILD_DIR/99-gitlab-proxy.conf /etc/ssh/sshd_config.d/99-gitlab-proxy.conf
     else
         echo "Warning: /etc/ssh/sshd_config.d directory is missing"
+        echo "Please manually add the contents of $BUILD_DIR/99-gitlab-proxy.conf to your /etc/ssh/sshd_config configuration"
     fi
 
     set +e
